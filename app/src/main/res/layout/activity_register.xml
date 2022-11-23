@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_dff">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/reg_Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_24"
+        app:title="注册" />
+
+    <EditText
+        android:id="@+id/reg_account_edit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="184dp"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_boy_24"
+        android:hint="请输入您的学号或者工号（大于等于3位）"
+        android:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_Toolbar" />
+
+    <EditText
+        android:id="@+id/reg_password_edit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_do_disturb_alt_24"
+        android:hint="请输入密码，由字母和数字组成，不小于8位"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_account_edit" />
+
+    <EditText
+        android:id="@+id/reg_password_again_edit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+
+        android:background="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_do_disturb_alt_24"
+        android:hint="请再次输入密码，由字母和数字组成，不小于8位"
+        android:inputType="textPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_password_edit" />
+
+    <EditText
+        android:id="@+id/reg_name_edit"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:drawableLeft="@drawable/ic_baseline_emoji_emotions_24"
+        android:hint="请输入您的姓名"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_password_again_edit" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView6"
+        android:layout_width="249dp"
+        android:layout_height="175dp"
+        android:src="@drawable/ic_baseline_assignment_ind_24"
+        app:layout_constraintBottom_toTopOf="@+id/reg_account_edit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reg_Toolbar" />
+
+    <Button
+        android:id="@+id/teacher_res"
+        android:layout_width="150dp"
+        android:layout_height="56dp"
+        android:background="@color/green_dff"
+        android:text="教师注册"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/student_res"
+        app:layout_constraintHorizontal_bias="0.442"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/student_res"
+        android:layout_width="150dp"
+        android:layout_height="56dp"
+        android:background="@color/green_dff"
+        android:text="学生注册"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.877"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="0dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="-24dp" />
+
+    <RadioGroup
+        android:id="@+id/reg_radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="432dp"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/reg_Toolbar"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="0dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="请选择您的性别："
+            android:textColor="@color/black"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/reg_sex_man"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:text="男"
+            android:textSize="20sp" />
+
+        <RadioButton
+            android:id="@+id/reg_sex_women"
+            android:layout_width="72dp"
+            android:layout_height="match_parent"
+            android:text="女"
+            android:textSize="20sp" />
+    </RadioGroup>
+</androidx.constraintlayout.widget.ConstraintLayout>
