@@ -7,7 +7,7 @@ public class Me {
     private String password;//密码
     private String name;//名字
     private boolean gender;//性别
-    private boolean isteacher = true;//是否为老师
+    private boolean isteacher = true;//是否为老师,true表示为老师
 
     public Me(String account,String password,String name,boolean gender,boolean job){
         this.account = account;

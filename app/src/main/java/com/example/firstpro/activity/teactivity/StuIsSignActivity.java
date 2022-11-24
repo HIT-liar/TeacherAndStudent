@@ -31,6 +31,8 @@ public class StuIsSignActivity extends MyActivity {
     }
 
     private void ListReact() {
+
+        //ToChange:签到信息的接收
         listView = (ListView) findViewById(R.id.stu_is_sign);
         Student student1 = new Student();
         Student student2 = new Student();

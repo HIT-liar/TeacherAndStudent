@@ -28,10 +28,10 @@ public class MySQLIteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 
         String personSql = "create table users(_id integer primary key autoincrement, account text, password text, name text, gender integer, job integer)";
-        String classesSql = "create table classes(_id integer primary key autoincrement, teacheraccount text, classname text, classnum integer, credit real, location text, maxstunum integer, time text)";
+
 
         db.execSQL(personSql);
-        db.execSQL(classesSql);
+
     }
 
     @Override
@@ -39,32 +39,6 @@ public class MySQLIteHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertClass(Class clas){
-
-
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        if(db.isOpen()) {
-
-            String taccount = clas.getTeacheraccount();
-            String classname = clas.getClass_name();
-            String classnum =( (Integer)clas.getClass_num()).toString();
-            String credit = String.valueOf(clas.getCourse_credit());
-            String location = clas.getLocation_Of_Class();
-            String maxstunum = ((Integer)clas.getMax_stu_num()).toString();
-            String time = clas.getTime();
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("insert into classes(teacheraccount,classname,classnum,credit,location,maxstunum,time) values(")
-                         .append("'"+taccount+"',").append("'"+classname+"',")
-                         .append(classnum+",").append(credit+",").append("'"+location+"',")
-                         .append(maxstunum+",").append("'"+time+"')");
-            String sql = stringBuilder.toString();
-
-            db.execSQL(sql);
-        }
-
-        db.close();
-    }
 
     public void insertUser(Me user){
 
@@ -82,12 +56,10 @@ public class MySQLIteHelper extends SQLiteOpenHelper {
            if(user.Isteacher()){
                job = "1";
            }
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("insert into users(account,password,name,gender,job) values(")
-                    .append("'"+account+"',").append("'"+password+"',")
-                    .append("'"+name+"',")
-                    .append(gender+",").append(job+")");
-            String sql = stringBuilder.toString();
+            String sql = "insert into users(account,password,name,gender,job) values(" +
+                    "'" + account + "'," + "'" + password + "'," +
+                    "'" + name + "'," +
+                    gender + "," + job + ")";
 
             db.execSQL(sql);
         }
@@ -96,11 +68,11 @@ public class MySQLIteHelper extends SQLiteOpenHelper {
     }
 
 
+    //没关db，失败后记得找这里修改一下
     public Cursor query(String sql, String[] args)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(sql, args);
-        return cursor;
+        return db.rawQuery(sql, args);
     }
 
 }

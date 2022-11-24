@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.stuactivity.StuOnClassActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView7"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background3"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/stu_onclass_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/trans_white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="正在上课" />
+
+    <Button
+        android:id="@+id/stu_button_handsup"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/stu_onclass_toolbar"
+        android:layout_marginEnd="55dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/button6"
+        android:text="举手"
+        android:textSize="30sp"
+
+        tools:layout_editor_absoluteX="30dp" />
+    <Button
+        android:id="@+id/stu_button_file"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="170dp"
+        app:layout_constraintTop_toBottomOf="@id/stu_onclass_toolbar"
+        android:layout_marginStart="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/button4"
+        android:text="课件"
+        android:textSize="30sp"
+
+        tools:layout_editor_absoluteX="30dp" />
+
+    <Button
+        android:id="@+id/stu_button_answer"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="100dp"
+        app:layout_constraintTop_toBottomOf="@id/stu_button_handsup"
+
+        android:background="@drawable/button5"
+        android:text="答题"
+        android:textSize="30sp"
+        />
+
+
+    <Button
+        android:id="@+id/stu_button_sign"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/button3"
+        android:text="签到"
+        android:textSize="30sp"
+
+        />
+
+    <Button
+        android:id="@+id/stu_button_leaveclass"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/button7"
+        android:text="暂时离开"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

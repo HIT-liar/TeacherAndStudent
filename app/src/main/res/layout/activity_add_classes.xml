@@ -75,6 +75,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/add_max_num_edit" />
 
+    <EditText
+        android:id="@+id/add_class_id_edit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="请输入课程号"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/add_time_edit" />
+
+
     <Button
         android:id="@+id/addClass_yes"
         android:layout_width="215dp"

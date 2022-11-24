@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.firstpro.R;
-import com.example.firstpro.activity.teactivity.ChosenActivity;
 import com.example.firstpro.activity.teactivity.TextQuesActivity;
 
 /**
@@ -76,17 +75,10 @@ public class QuestionFragment extends Fragment {
 
     private void initView() {
 
-        Button button_chosen = rootView.findViewById(R.id.choose_question);
+
         Button button_text = rootView.findViewById(R.id.text_question);
 
-        button_chosen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), ChosenActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         button_text.setOnClickListener(new View.OnClickListener() {
             @Override

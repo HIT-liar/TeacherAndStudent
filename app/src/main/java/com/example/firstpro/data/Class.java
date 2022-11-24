@@ -11,12 +11,17 @@ public class Class implements java.io.Serializable{
     private String Location_Of_Class;//上课地点的描述
     private String Time;//上课的时间
     private String teacheraccount;//相应的教师
+    private String class_id ;//课程号
+
+    private String teacher_name="";
 
     public Class(){
 
     }
-    public Class(String class_name,int class_num,int Max_stu_num,double course_credit,
-                 String location_Of_Class,String time,String teacheraccount){
+
+    public Class(String class_id,String class_name,int class_num,int Max_stu_num,double course_credit,
+                 String location_Of_Class,String time,String teacheraccount,int true_num){
+        this.class_id = class_id;
         this.class_num =class_num;
         this.class_name =class_name;
         this.Max_stu_num = Max_stu_num;
@@ -24,6 +29,7 @@ public class Class implements java.io.Serializable{
         this.Location_Of_Class = location_Of_Class;
         this.Time = time;
         this.teacheraccount = teacheraccount;
+        true_stu_num = true_num;
     }
 
     public void setClass_name(String class_name){
@@ -87,6 +93,21 @@ public class Class implements java.io.Serializable{
     }
     public String getTeacheraccount(){
         return teacheraccount;
+    }
+
+    public void setClass_id(String class_id){
+        this.class_id=class_id;
+    }
+    public  String getClass_id(){
+        return class_id;
+    }
+
+    public void setTeacher_name(String teacher_name){
+        this.teacher_name = teacher_name;
+    }
+
+    public String getTeacher_name(){
+        return teacher_name;
     }
 
 }

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.firstpro.activity.stuactivity.StuMainPageActivity;
 import com.example.firstpro.activity.teactivity.teacherMainPageAbility;
 import com.example.firstpro.database.AutoLoginStatic;
 import com.example.firstpro.activity.activityhelper.MyActivity;
@@ -60,16 +61,25 @@ public class MainActivity extends MyActivity {
         account.setText(AutoLoginStatic.getInstance().getUserNum(context));
         password.setText(AutoLoginStatic.getInstance().getPassword(context));
 
-
+       //从内存中获取相应数据
         String uname = AutoLoginStatic.getInstance().getUserNum(context);
         String pass = AutoLoginStatic.getInstance().getPassword(context);
         boolean isteacher = AutoLoginStatic.getInstance().isTeacher(context);
 
+        //若账号存在，此时其实是做核数据库内容的比较
+        //ToChange:
         if(uname.equals("12345")&&pass.equals("12345678")&&isteacher){
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, teacherMainPageAbility.class);
 
             startActivity(intent);
+            MainActivity.this.finish();
+        }else if(uname.equals("678910")&&pass.equals("12345678")&&!isteacher){
+            //若为学生：ToDo：
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, StuMainPageActivity.class);
+            startActivity(intent);
+
             MainActivity.this.finish();
         }
 
@@ -96,7 +106,11 @@ public class MainActivity extends MyActivity {
 
                 if (TextUtils.isEmpty(account_str) || TextUtils.isEmpty(password_str)) {
                     Toast.makeText(getApplicationContext(),"用户名或密码为空",Toast.LENGTH_SHORT).show();
-                }else if(account_str.equals("12345")&&password_str.equals("12345678")){
+                }else if((account_str.equals("12345")&&password_str.equals("12345678"))||
+                        (account_str.equals("678910")&&password_str.equals("12345678"))){
+                    //若账号存在
+                    //ToChange:判断条件从数据库中获取
+                    boolean isTea = false;//需改成按照账号从数据库中获取
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setIcon(R.drawable.loginicon)
                         .setTitle("登录")
@@ -107,10 +121,18 @@ public class MainActivity extends MyActivity {
 
                                 AutoLoginStatic.getInstance().setUserNum(account_str,context);
                                 AutoLoginStatic.getInstance().setPassword(password_str,context);
-                                AutoLoginStatic.getInstance().setTeacher(true,context);
+                                if(isTea) {//老师
+                                    AutoLoginStatic.getInstance().setTeacher(true, context);
+                                }else{//学生
+                                    AutoLoginStatic.getInstance().setTeacher(false, context);
+                                }
                                 Intent intent = new Intent();
-                                intent.setClass(MainActivity.this, teacherMainPageAbility.class);
-
+                                if(isTea) {
+                                    intent.setClass(MainActivity.this, teacherMainPageAbility.class);
+                                }else{
+                                    //ToDo:
+                                    intent.setClass(MainActivity.this, StuMainPageActivity.class);
+                                }
                                 startActivity(intent);
                                 MainActivity.this.finish();
                             }
@@ -118,6 +140,7 @@ public class MainActivity extends MyActivity {
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                //无事发生
                                 ;
                             }
                         })

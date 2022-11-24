@@ -64,6 +64,7 @@ public class PasswordChange extends MyActivity {
                 if(TextUtils.isEmpty(op_str)||TextUtils.isEmpty(np_str)||TextUtils.isEmpty(anp_str)){
                     Toast.makeText(getApplicationContext(),"各项均不能为空",Toast.LENGTH_SHORT).show();
                 }else if(!op_str.equals("12345678")){
+                    //ToChange:需从数据库中取得对应账号对应的原密码
                     Toast.makeText(getApplicationContext(),"原密码不正确",Toast.LENGTH_SHORT).show();
                 }else if(np_str.length()<8){
                     Toast.makeText(getApplicationContext(),"新密码长度需要大于等于8",Toast.LENGTH_SHORT).show();
@@ -77,12 +78,15 @@ public class PasswordChange extends MyActivity {
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    update(account,np_str);
+                                    update(account,np_str);//更新本地数据库密码
+                                    //因为修改了新密码，所以再登录时需重新输入密码，故把SP中password改为空
+                                    AutoLoginStatic.getInstance().setPassword("",context);
                                     Intent intent = new Intent();
-                                    intent.setClass(PasswordChange.this, PersonIformationActivity.class);
+                                    //退回主界面
+                                    intent.setClass(PasswordChange.this, MainActivity.class);
 
                                     startActivity(intent);
-                                    ActivityCollector.finishOneActivity(PasswordChange.class.getName());
+                                    ActivityCollector.finishOtherActivity(MainActivity.class.getName());
                                 }
                             })
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -99,6 +103,9 @@ public class PasswordChange extends MyActivity {
     }
 
     private void update (String account, String password){
+
+        //先更新远端数据库，再更新本地数据库
+        //ToDo:更新远端数据库
 
         MySQLIteHelper helper = MySQLIteHelper.getInstance(context);
         SQLiteDatabase db = helper.getWritableDatabase();

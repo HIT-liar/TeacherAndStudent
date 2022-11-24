@@ -11,13 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-    <Button
-        android:id="@+id/choose_question"
-        android:background="@drawable/button2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="发布选择"
-        />
 
         <Button
             android:layout_marginTop="10dp"

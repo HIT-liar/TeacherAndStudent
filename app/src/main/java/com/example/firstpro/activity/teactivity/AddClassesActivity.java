@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.firstpro.database.AutoLoginStatic;
 import com.example.firstpro.data.Class;
 import com.example.firstpro.activity.activityhelper.MyActivity;
+import com.example.firstpro.database.ClassesSQLIteHelper;
 import com.example.firstpro.database.MySQLIteHelper;
 import com.example.firstpro.R;
 
@@ -28,6 +29,7 @@ public class AddClassesActivity extends MyActivity {
     private EditText classMAXnum;
     private EditText location;
     private EditText classtime;
+    private EditText class_id;
     private Context context;
 
     @Override
@@ -46,6 +48,7 @@ public class AddClassesActivity extends MyActivity {
         classMAXnum = (EditText) findViewById(R.id.add_max_num_edit) ;
         location = (EditText) findViewById(R.id.add_location_num_edit) ;
         classtime = (EditText) findViewById(R.id.add_time_edit) ;
+        class_id = (EditText) findViewById(R.id.add_class_id_edit) ;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.addclasses_toolbar);
 
@@ -62,6 +65,7 @@ public class AddClassesActivity extends MyActivity {
             @Override
             public void onClick(View view) {
 
+                //获得EditText中的内容
                 String classname_str = classname.getText().toString().trim();
                 String classnum_str = classnum.getText().toString().trim();
                 int classnum_int = Integer.valueOf(classnum_str);
@@ -71,12 +75,14 @@ public class AddClassesActivity extends MyActivity {
                 int classMaxnum_int = Integer.valueOf(classMaxnum_str);
                 String location_str = location.getText().toString().trim();
                 String classtime_str = classtime.getText().toString().trim();
+                String classid_str = class_id.getText().toString().trim();
 
                 String account = AutoLoginStatic.getInstance().getUserNum(context);
 
                 if(TextUtils.isEmpty(classname_str)||TextUtils.isEmpty(classnum_str)||
                         TextUtils.isEmpty(credit_str)||TextUtils.isEmpty(classMaxnum_str)||
-                        TextUtils.isEmpty(location_str)||TextUtils.isEmpty(classtime_str)){
+                        TextUtils.isEmpty(location_str)||TextUtils.isEmpty(classtime_str)||
+                TextUtils.isEmpty(classid_str)){
                     Toast.makeText(getApplicationContext(),"您输入的信息不完善",Toast.LENGTH_SHORT).show();
                 }
                 else {
@@ -87,8 +93,8 @@ public class AddClassesActivity extends MyActivity {
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    Class myclass = new Class(classname_str,classnum_int,classMaxnum_int,credit_double,location_str,classtime_str,account);
-                                    MySQLIteHelper.getInstance(context).insertClass(myclass);
+                                    Class myclass = new Class(classid_str,classname_str,classnum_int,classMaxnum_int,credit_double,location_str,classtime_str,account,0);
+                                    ClassesSQLIteHelper.getInstance(context).insertClass(myclass);
                                     Intent intent = new Intent();
                                     intent.setClass(AddClassesActivity.this, myclassesActivity.class);
 

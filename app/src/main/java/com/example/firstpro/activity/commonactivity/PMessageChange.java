@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -51,7 +52,7 @@ public class PMessageChange extends MyActivity {
         sex_change = (Button) findViewById(R.id.sex_change);
         final boolean[] sexflag = {false,false,false};
 
-          change_yes_btn = (Button) findViewById(R.id.change_yes) ;
+        change_yes_btn = (Button) findViewById(R.id.change_yes) ;
 
         name_edit = (EditText) findViewById(R.id.per_change_name);
 
@@ -125,6 +126,7 @@ public class PMessageChange extends MyActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                    update(account,name,sexflag);
+                                   ActivityCollector.finishOneActivity(PersonIformationActivity.class.getName());
                                     Intent intent = new Intent();
                                     intent.setClass(PMessageChange.this, PersonIformationActivity.class);
                                     startActivity(intent);
@@ -147,14 +149,44 @@ public class PMessageChange extends MyActivity {
     private void setEdit(){
 
 
+        //想到了一个避免麻烦的好办法，就是联网了就都用远端，且更新本地，没联网就都用本地！！！
+
         name_edit = (EditText) findViewById(R.id.per_change_name);
 
-        name_edit.setText("李四");
+        String account = AutoLoginStatic.getInstance().getUserNum(context);
+        //从本地数据库中根据用户账号来查询用户名并显示
+        MySQLIteHelper mySQLIteHelper = MySQLIteHelper.getInstance(context);
+        SQLiteDatabase db = mySQLIteHelper.getReadableDatabase();
+
+        String sql = "select name from users where account="+account;
+
+        Cursor cursor = mySQLIteHelper.query(sql,null);
+        int size = cursor.getCount();
+        int index = cursor.getColumnIndex("name");
+        //其实就有一个
+        for(int i=0;i<size;i++){
+            cursor.moveToNext();
+            name_edit.setText(cursor.getString(index));
+        }
+        cursor.close();
+        db.close();
+
+        //从远端拉取
+        //ToDo：
+        //name_edit.setText("李四");
     }
 
     private void update(String account,String name,boolean[] flags){
+
+        //先更新远端数据库，再更新本地数据库
+        //ToDo:更新远端数据库
+
+
+
+        //更新本地数据库
         MySQLIteHelper helper = MySQLIteHelper.getInstance(context);
         SQLiteDatabase db = helper.getWritableDatabase();
+
         if(db.isOpen()){
             String nsql = "update users set name =? where account =?";
             db.execSQL(nsql,new Object[]{name,account});
@@ -171,4 +203,6 @@ public class PMessageChange extends MyActivity {
         }
         db.close();
     }
+
+
 }

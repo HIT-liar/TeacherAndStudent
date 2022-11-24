@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.stuactivity.StuMainPageActivity">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView2"
+        android:layout_width="match_parent"
+        android:layout_height="144dp"
+        android:layout_marginBottom="160dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/classbegin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView3"
+        android:layout_width="match_parent"
+        android:layout_height="144dp"
+        android:layout_marginBottom="304dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/myclasses"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView4"
+        android:layout_width="match_parent"
+        android:layout_height="144dp"
+
+        android:scaleType="fitStart"
+        android:src="@drawable/message"
+        app:layout_constraintBottom_toTopOf="@+id/appCompatImageView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/stu_personal_btn"
+        android:layout_width="139dp"
+        android:layout_height="68dp"
+        android:background="@color/white"
+        android:text="个人信息"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.79"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appCompatImageView4"
+        app:layout_constraintVertical_bias="0.513" />
+
+    <Button
+        android:id="@+id/stu_myclasses_btn"
+        android:layout_width="139dp"
+        android:layout_height="68dp"
+        android:background="@color/white"
+        android:text="课程管理"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.79"
+        app:layout_constraintStart_toStartOf="@+id/appCompatImageView3"
+        app:layout_constraintTop_toTopOf="@+id/appCompatImageView3" />
+
+    <Button
+        android:id="@+id/stu_classbegin_btn"
+        android:layout_width="139dp"
+        android:layout_height="68dp"
+        android:background="@color/white"
+        android:text="进入课堂"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/appCompatImageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.79"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/appCompatImageView2"
+        app:layout_constraintVertical_bias="0.539" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_stu_main"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/green_dff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="学生端教学交互系统" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -82,6 +82,7 @@ public class AddfileFragment extends Fragment {
     private void ListReact() {
         listView = (ListView) rootView.findViewById(R.id.list_file_frag);
 
+        //传输的文件显示
         FileToSend fileToSend1 = new FileToSend();
         list.add(fileToSend1);
 
@@ -98,6 +99,8 @@ public class AddfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                //ToDo：传输文件
+                //ListReact();
             }
         });
 

@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +17,8 @@ import com.example.firstpro.database.AutoLoginStatic;
 import com.example.firstpro.data.Class;
 import com.example.firstpro.activity.listviewadapter.ClassListAdapter;
 import com.example.firstpro.activity.activityhelper.MyActivity;
+import com.example.firstpro.database.ChooseClassSQLIteHelper;
+import com.example.firstpro.database.ClassesSQLIteHelper;
 import com.example.firstpro.database.MySQLIteHelper;
 import com.example.firstpro.R;
 
@@ -25,7 +28,7 @@ import java.util.List;
 
 public class myclassesActivity extends MyActivity {
 
-    private List<Class> list = new ArrayList<Class>();
+    private final List<Class> list = new ArrayList<Class>();
     private ListView listView;
 
     private ClassListAdapter classListAdapter;
@@ -70,6 +73,7 @@ public class myclassesActivity extends MyActivity {
         Class class2 =new Class();
 
         class1.setClass_name("微积分");
+        class1.setClass_id("12E3");
         class1.setTrue_stu_num(50);
         class1.setClass_num(60);
         class1.setMax_stu_num(100);
@@ -79,6 +83,7 @@ public class myclassesActivity extends MyActivity {
         list.add(class1);
 
         class2.setClass_name("计算机组成原理");
+        class2.setClass_id("23R4");
         class2.setTrue_stu_num(50);
         class2.setClass_num(48);
         class2.setMax_stu_num(100);
@@ -98,6 +103,7 @@ public class myclassesActivity extends MyActivity {
                 Intent intent = new Intent();
                 intent.setClass(myclassesActivity.this, ClassMessageActivity.class);
                 Bundle bundle = new Bundle();
+                bundle.putString("class_id",list.get(position).getClass_id());
                 bundle.putString("name",list.get(position).getClass_name());
                 bundle.putString("num", new Integer(list.get(position).getClass_num()).toString());
                 bundle.putString("stu_max",new Integer(list.get(position).getMax_stu_num()).toString());
@@ -113,28 +119,55 @@ public class myclassesActivity extends MyActivity {
     }
 
     private void getClassFromDB(){
-         MySQLIteHelper helper = MySQLIteHelper.getInstance(context);
-         String sql = "select teacheraccount,classname,classnum,credit,location,maxstunum,time from classes";
+
+        //先判断是否联网，联网的话就取远端数据，并显示
+        //ToDo:取远端数据
+
+
+
+        //同时取本地数据
+         ClassesSQLIteHelper helper = ClassesSQLIteHelper.getInstance(context);
+        SQLiteDatabase db = helper.getReadableDatabase();
+         String sql = "select classid,teacheraccount,classname,classnum,credit,location,maxstunum,time,true_stunum from classes";
         Cursor cursor = helper.query(sql,null);
         int size = cursor.getCount();
 
         String account = AutoLoginStatic.getInstance().getUserNum(context);
 
+        //比较远端和本地是否有增删，若有增删，则更新本地数据
+        //ToDo:更新本地数据
+
+        //如果断网，则直接显示本地数据
+        //ToChange:
+
+        int classid_index = cursor.getColumnIndex("classid");
+        int teacheracc_index = cursor.getColumnIndex("teacheraccount");
+        int classname_index = cursor.getColumnIndex("classname");
+        int classnum_index = cursor.getColumnIndex("classnum");
+        int credit_index = cursor.getColumnIndex("credit");
+        int location_index = cursor.getColumnIndex("location");
+        int max_index = cursor.getColumnIndex("maxstunum");
+        int time_index = cursor.getColumnIndex("time");
+        int true_index = cursor.getColumnIndex("true_stunum");
+
         for(int i=0;i<size;i++){
             cursor.moveToNext();
-            if(cursor.getString(0).equals(account)){
+            if(cursor.getString(teacheracc_index).equals(account)){
                 Class myclass = new Class();
-                myclass.setClass_name(cursor.getString(1));
-                myclass.setTrue_stu_num(50);
-                myclass.setClass_num(cursor.getInt(2));
-                myclass.setMax_stu_num(cursor.getInt(5));
-                myclass.setCourse_credit(cursor.getDouble(3));
-                myclass.setLocation_Of_Class(cursor.getString(4));
-                myclass.setTime(cursor.getString(6));
+                myclass.setClass_id(cursor.getString(classid_index));
+                myclass.setClass_name(cursor.getString(classname_index));
+                myclass.setTrue_stu_num(cursor.getInt(true_index));
+                myclass.setClass_num(cursor.getInt(classnum_index));
+                myclass.setMax_stu_num(cursor.getInt(max_index));
+                myclass.setCourse_credit(cursor.getDouble(credit_index));
+                myclass.setLocation_Of_Class(cursor.getString(location_index));
+                myclass.setTime(cursor.getString(time_index));
 
                 list.add(myclass);
             }
         }
+        cursor.close();
+        db.close();
 
     }
 

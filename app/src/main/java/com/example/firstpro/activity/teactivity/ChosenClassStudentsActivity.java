@@ -48,6 +48,11 @@ public class ChosenClassStudentsActivity extends MyActivity {
         Student student1 = new Student();
         Student student2 = new Student();
 
+        //从远端数据库获取数据
+        //ToDo:获取选了该课的学生信息
+
+
+        //ToChange:
         student1.setStu_gender(true);
         student1.setStu_name("王五");
         student1.setStu_num("120L028888");

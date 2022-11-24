@@ -13,7 +13,51 @@
         android:theme="@style/Theme.FirstPro"
         tools:targetApi="31">
         <activity
-            android:name=".activity.teactivity.ChosenActivity"
+            android:name=".activity.stuactivity.StuMyclassMessageActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.stuactivity.SelectClassesActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.stuactivity.MyClassesActivity"
+            android:exported="false"
+            android:label="@string/title_activity_my_classes"
+            android:theme="@style/Theme.FirstPro.NoActionBar">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.stuactivity.SignInActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.stuactivity.AnswerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.stuactivity.StuOnClassActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.stuactivity.StuMainPageActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

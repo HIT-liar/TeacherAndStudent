@@ -8,7 +8,7 @@
     tools:context=".activity.teactivity.ClassMessageActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/c_m_toolbar"
+        android:id="@+id/stu_c_m_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:title="课程信息"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-           android:id="@+id/class_name_message"
+            android:id="@+id/stu_class_name_message"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -48,7 +48,27 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/class_class_id_message"
+            android:id="@+id/stu_class_class_id_message"
+            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        >
+        <TextView
+            android:text="教师："
+            android:textSize="25sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/stu_class_teacher_message"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -68,7 +88,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/class_num_message"
+            android:id="@+id/stu_class_num_message"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -88,7 +108,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/class_maxstu_message"
+            android:id="@+id/stu_class_maxstu_message"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -108,7 +128,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/class_stunum_message"
+            android:id="@+id/stu_class_stunum_message"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -128,7 +148,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/class_credit_message"
+            android:id="@+id/stu_class_credit_message"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -148,7 +168,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/class_location_message"
+            android:id="@+id/stu_class_location_message"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -168,32 +188,12 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/class_time_message"
+            android:id="@+id/stu_class_time_message"
             android:textSize="25sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
-    <androidx.appcompat.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:title="学生表单">
 
-        <ImageButton
-            android:id="@+id/stulist_btn"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:src="@drawable/ic_baseline_navigate_next_24"
-            android:background="@color/white"/>
-    </androidx.appcompat.widget.Toolbar>
-
-    <Button
-        android:id="@+id/delete_class_btn"
-        android:background="@drawable/button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="删除本课"
-        android:textSize="25dp"/>
 </LinearLayout>
