@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +18,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.firstpro.R;
+import com.example.firstpro.WebService.MyURL;
+import com.example.firstpro.WebService.ServerService;
 import com.example.firstpro.activity.stuactivity.MyClassesActivity;
 import com.example.firstpro.activity.stuactivity.StuMyclassMessageActivity;
+import com.example.firstpro.activity.teactivity.AddClassesActivity;
+import com.example.firstpro.activity.teactivity.myclassesActivity;
 import com.example.firstpro.data.Class;
 import com.example.firstpro.database.AutoLoginStatic;
 import com.example.firstpro.database.ChooseClassSQLIteHelper;
+import com.example.firstpro.database.ClassesSQLIteHelper;
 import com.example.firstpro.database.MySQLIteHelper;
 import com.example.firstpro.activity.activityhelper.MyActivity;
 
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +43,13 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
     private List<Class> classList;
     Bundle bundle = new Bundle();
 
+    ServerService sv = new ServerService();
+    MyHandler myHandler = new MyHandler();
+    private String stu_id = AutoLoginStatic.getInstance().getUserNum(mContext);
+    private String class_id = "";
+
+    private int max;
+    private int true_num;
 
     public ClassInfoAdapter(Context context, Button.OnClickListener listener, boolean b, List<Class> classes) {
         this.mContext = context;
@@ -65,6 +80,8 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
         }
         holder.classID_text.setText(classList.get(position).getClass_id());
         bundle.putString("class_id",classList.get(position).getClass_id());
+        class_id =classList.get(position).getClass_id();
+
         holder.className_text.setText(classList.get(position).getClass_name());
         bundle.putString("classname",classList.get(position).getClass_name());
         //这里老师名字的设定应该从远端数据库拉取，由account去users表中查询获得
@@ -77,8 +94,10 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
         holder.classRoom_text.setText(classList.get(position).getLocation_Of_Class());
         bundle.putString("location",classList.get(position).getLocation_Of_Class());
         holder.classCapacity_text.setText("容量：" + classList.get(position).getTrue_stu_num() + "/" + classList.get(position).getMax_stu_num());
-        bundle.putString("true_num",""+classList.get(position).getTrue_stu_num());
-        bundle.putString("max_num",""+classList.get(position).getMax_stu_num());
+        true_num =classList.get(position).getTrue_stu_num();
+        bundle.putString("true_num",""+true_num);
+        max =classList.get(position).getMax_stu_num();
+        bundle.putString("max_num",""+max);
         bundle.putString("credit",""+classList.get(position).getCourse_credit());
         bundle.putString("class_num",""+classList.get(position).getClass_num());
 //        holder.classIntro_button.setOnClickListener( new View.OnClickListener() {
@@ -149,19 +168,24 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
             classSelect_button = itemView.findViewById(R.id.selectClassButton);
             classSelect_button.setOnClickListener(new View.OnClickListener() {
  //               StuDatabaseHelper sdb = new StuDatabaseHelper(mContext);
-                ChooseClassSQLIteHelper chooseClassSQLIteHelper = ChooseClassSQLIteHelper.getInstance(mContext);
-                String class_id = aClass.getClass_id();
-                String stu_id = AutoLoginStatic.getInstance().getUserNum(mContext);
+//                ChooseClassSQLIteHelper chooseClassSQLIteHelper = ChooseClassSQLIteHelper.getInstance(mContext);
+//                String class_id = aClass.getClass_id();
+//                String stu_id = AutoLoginStatic.getInstance().getUserNum(mContext);
                 @Override
                 public void onClick(View view) {
                     //mListener.onClick(view);
                     if (isSelect) {
-
-                        String s = chooseClassSQLIteHelper.insertChoice(class_id,stu_id);
-                        Toast.makeText(mContext, "Select: " + s, Toast.LENGTH_LONG).show();
+                        if(max>true_num) {
+                            ChoseClass();
+                        }else {
+                            Toast.makeText(mContext, "容量已满", Toast.LENGTH_LONG).show();
+                        }
+//                        String s = chooseClassSQLIteHelper.insertChoice(class_id,stu_id);
+//                        Toast.makeText(mContext, "Select: " + s, Toast.LENGTH_LONG).show();
                     } else {
-                        String s = chooseClassSQLIteHelper.deleteOne(class_id,stu_id);
-                        Toast.makeText(mContext, "Unselect: " + s, Toast.LENGTH_LONG).show();
+                        DeleteChoice();
+//                        String s = chooseClassSQLIteHelper.deleteOne(class_id,stu_id);
+//                        Toast.makeText(mContext, "Unselect: " + s, Toast.LENGTH_LONG).show();
                     }
                 }
             });
@@ -170,5 +194,70 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
 
     public interface OnItemClickListener {
         void OnClick(int pos);
+    }
+
+    public void ChoseClass(){
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+              boolean flag =  sv.DeleteMyClass(class_id, MyURL.LoginURL,false,stu_id,true);
+
+                System.out.println(flag);
+                Message msg = myHandler.obtainMessage();
+                msg.what = 1;
+                if(flag){
+                    msg.arg1 =1;
+                }else {
+                    msg.arg1 =2;
+                }
+                myHandler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    public void DeleteChoice(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                boolean flag =sv.DeleteMyClass(class_id,MyURL.StuURL,false,stu_id,false);
+                Message msg = myHandler.obtainMessage();
+                msg.what = 2;
+                if(flag){
+                    msg.arg1 =1;
+                }else {
+                    msg.arg1 =2;
+                }
+
+                myHandler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    private class MyHandler extends Handler {
+
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            ChooseClassSQLIteHelper chooseClassSQLIteHelper = ChooseClassSQLIteHelper.getInstance(mContext);
+            switch (msg.what) {
+                case 1:
+                    String s = chooseClassSQLIteHelper.insertChoice(class_id,stu_id);
+                    if(msg.arg1==1)
+                    Toast.makeText(mContext, "Select: " + s, Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(mContext, "Select: false" , Toast.LENGTH_LONG).show();
+                    break;
+                case 2:
+                    String r = chooseClassSQLIteHelper.deleteOne(class_id,stu_id);
+                    if(msg.arg1==1)
+                        Toast.makeText(mContext, "UnSelect: " + r, Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(mContext, "UnSelect: false" , Toast.LENGTH_LONG).show();
+                    break;
+            }
+        }
     }
 }

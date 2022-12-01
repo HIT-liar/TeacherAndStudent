@@ -9,6 +9,14 @@ public class Student implements java.io.Serializable{
     private String stu_name;
     private boolean stu_gender;
 
+    public  Student(){}
+
+    public Student(String stu_num,String stu_name,boolean stu_gender){
+        this.stu_gender =stu_gender;
+        this.stu_name =stu_name;
+        this.stu_num =stu_num;
+    }
+
     public void setStu_num(String stu_num){
         this.stu_num =stu_num;
     }

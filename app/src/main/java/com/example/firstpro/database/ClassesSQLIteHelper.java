@@ -9,6 +9,9 @@ import androidx.annotation.Nullable;
 
 import com.example.firstpro.data.Class;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClassesSQLIteHelper extends SQLiteOpenHelper {
 
     private static ClassesSQLIteHelper mInstance;
@@ -86,6 +89,48 @@ public class ClassesSQLIteHelper extends SQLiteOpenHelper {
 
         db.close();
 
+    }
+
+    public void update(List<Class> classList,Context context){
+        List<Class> classes = new ArrayList<>(classList);
+        List<String> classidList = new ArrayList<>();
+        for(Class cla : classes){//从远端数据库中获得的清单
+            classidList.add(cla.getClass_id());
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        if(db.isOpen()) {
+            String cursor_query = "select classid from classes";
+            Cursor cursor = db.rawQuery(cursor_query, null);
+            int size = cursor.getCount();
+            int index = cursor.getColumnIndex("classid");
+           //若本地数据库有，则不管，若本地数据库有而远端没有，则删除
+            for (int i=0;i<size;i++){
+                cursor.moveToNext();
+                String class_id = cursor.getString(index);
+                if(classidList.contains(class_id)){
+                    classidList.remove(class_id);
+                }else{
+                    String deleSQL = "delete from classes where classid=?";
+                    db.execSQL(deleSQL,new Object[]{class_id});
+                }
+            }
+            cursor.close();
+            db.close();
+            //把剩下的加进本地数据库
+            if(classidList.size()>=1) {
+                List<Class> classList2 = new ArrayList<>();
+                for(Class cla : classes){
+                    if(classidList.contains(cla.getClass_id())){
+                        classList2.add(cla);
+                    }
+                }
+                for(Class cla : classList2){
+                    ClassesSQLIteHelper.getInstance(context).insertClass(cla);
+                }
+            }
+
+        }
     }
 
 }

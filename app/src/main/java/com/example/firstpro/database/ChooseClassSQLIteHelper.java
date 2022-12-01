@@ -52,11 +52,11 @@ public class ChooseClassSQLIteHelper extends SQLiteOpenHelper {
 
         if(db.isOpen()) {
 
-            flag = true;
-            String sql = "insert into choices(class_id,stu_account) values(" +
-                    "'" + class_id + "'," + "'" + stuid + "')" ;
+                flag = true;
+                String sql = "insert into choices(class_id,stu_account) values(" +
+                        "'" + class_id + "'," + "'" + stuid + "')";
 
-            db.execSQL(sql);
+                db.execSQL(sql);
         }
 
         db.close();
@@ -149,6 +149,46 @@ public class ChooseClassSQLIteHelper extends SQLiteOpenHelper {
             return "success";
         }else {
             return "fail";
+        }
+    }
+
+    public void update(List<Class> classes, String stu_id, Context context){
+        List<String> classidList = new ArrayList<>();
+        for(Class cla : classes){
+            classidList.add(cla.getClass_id());
+        }
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        if(db.isOpen()) {
+            String existSQL = "select * from choices where stu_account=?";
+            Cursor cursor = db.rawQuery(existSQL, new String[]{stu_id});
+            int size = cursor.getCount();
+            int class_id_index = cursor.getColumnIndex("class_id");
+            for (int i = 0; i < size; i++) {
+                cursor.moveToNext();
+                String claid = cursor.getString(class_id_index);
+                if (classidList.contains(claid)) {
+                    classidList.remove(claid);
+                } else {
+                    String sql = "delete from choices where class_id=? and stu_account=?";
+                    db.execSQL(sql,new Object[]{claid,stu_id});
+                }
+            }
+            db.close();
+
+            if(classidList.size()>0) {
+                for (String id : classidList) {
+                    insertChoice(id, stu_id);
+                    for(Class cla : classes){
+                        if(cla.getClass_id().equals(id)){
+                            ClassesSQLIteHelper.getInstance(context).insertClass(cla);
+                            break;
+                        }
+                    }
+                }
+            }
+
         }
     }
 }

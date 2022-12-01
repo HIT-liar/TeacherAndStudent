@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +16,16 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.firstpro.WebService.MyURL;
+import com.example.firstpro.WebService.ServerService;
 import com.example.firstpro.activity.activityhelper.ActivityCollector;
 import com.example.firstpro.data.Me;
 import com.example.firstpro.activity.activityhelper.MyActivity;
+import com.example.firstpro.database.AutoLoginStatic;
 import com.example.firstpro.database.MySQLIteHelper;
 import com.example.firstpro.R;
+
+import java.lang.ref.WeakReference;
 
 public class RegisterActivity extends MyActivity {
 
@@ -34,6 +41,9 @@ public class RegisterActivity extends MyActivity {
 
 
     private RadioGroup radioGroup;
+
+    private MyHandler myHandler= new MyHandler(this);
+    private ServerService sv =new ServerService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,11 +116,12 @@ public class RegisterActivity extends MyActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     Me me = new Me(account,password,name,sexflag[1],true);
-                                    MySQLIteHelper.getInstance(context).insertUser(me);
-                                    Intent intent = new Intent();
-                                    intent.setClass(RegisterActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    ActivityCollector.finishOneActivity(RegisterActivity.class.getName());
+                                     ResToRemote(me);
+//                                    MySQLIteHelper.getInstance(context).insertUser(me);
+//                                    Intent intent = new Intent();
+//                                    intent.setClass(RegisterActivity.this, MainActivity.class);
+//                                    startActivity(intent);
+//                                    ActivityCollector.finishOneActivity(RegisterActivity.class.getName());
                                 }
                             })
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -153,11 +164,12 @@ public class RegisterActivity extends MyActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     Me me = new Me(account,password,name,sexflag[1],false);
-                                    MySQLIteHelper.getInstance(context).insertUser(me);
-                                    Intent intent = new Intent();
-                                    intent.setClass(RegisterActivity.this,MainActivity.class);
-                                    startActivity(intent);
-                                    ActivityCollector.finishOneActivity(RegisterActivity.class.getName());
+                                    ResToRemote(me);
+//                                    MySQLIteHelper.getInstance(context).insertUser(me);
+//                                    Intent intent = new Intent();
+//                                    intent.setClass(RegisterActivity.this,MainActivity.class);
+//                                    startActivity(intent);
+//                                    ActivityCollector.finishOneActivity(RegisterActivity.class.getName());
                                 }
                             })
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -174,5 +186,55 @@ public class RegisterActivity extends MyActivity {
         });
     }
 
+    private void ResToRemote(Me me){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //将注册信息发送至远端
+                String flag = sv.regToRemote(me, MyURL.LoginURL);
+                Message msg = myHandler.obtainMessage();
+                msg.obj = me;
+                if(flag.equals("true")) {
+                    msg.arg1=1;
+                }else if (flag.equals("repeat")){
+                    msg.arg1 = 2;
+                }else{
+                    msg.arg1 = 3;
+                }
+                msg.what=1;
+                myHandler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    private class MyHandler extends Handler {
+
+        //弱引用持有HandlerActivity , GC 回收时会被回收掉
+        private WeakReference<RegisterActivity> weakReference;
+
+        public MyHandler(RegisterActivity activity) {
+            this.weakReference = new WeakReference(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Me me = (Me) msg.obj;
+            switch (msg.what) {
+                case 1:
+                    if(msg.arg1==1) {//存到本地，且切换回登录界面
+                        MySQLIteHelper.getInstance(context).insertUser(me);
+                        Intent intent = new Intent();
+                        intent.setClass(RegisterActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        ActivityCollector.finishOneActivity(RegisterActivity.class.getName());
+                    }else if(msg.arg1==2){
+                        Toast.makeText(getApplicationContext(),"注册失败,用户名已存在",Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getApplicationContext(),"注册失败,请检查网络",Toast.LENGTH_SHORT).show();
+                    }
+            }
+        }
+    }
 
 }

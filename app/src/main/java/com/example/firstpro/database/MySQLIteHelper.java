@@ -75,4 +75,33 @@ public class MySQLIteHelper extends SQLiteOpenHelper {
         return db.rawQuery(sql, args);
     }
 
+    public void update(Me user){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String account = user.getAccount();
+        if(db.isOpen()) {
+            String sql = "select * from users where account='" + account + "'";
+            Cursor cursor = db.rawQuery(sql, null);
+            if (cursor == null || cursor.getCount() < 1) {
+                db.close();
+                cursor.close();
+                insertUser(user);
+                return;
+            } else {
+                //更新用户名
+                String nsql = "update users set name =? where account =?";
+                db.execSQL(nsql,new Object[]{user.getName(),account});
+                //更新性别
+                    String gsql = "update users set gender =? where account =?";
+                    if(user.getGender()){
+                        db.execSQL(gsql,new Object[]{1,account});
+                    }else {
+                        db.execSQL(gsql,new Object[]{0,account});
+                    }
+                    db.close();
+                    cursor.close();
+            }
+        }
+
+    }
+
 }

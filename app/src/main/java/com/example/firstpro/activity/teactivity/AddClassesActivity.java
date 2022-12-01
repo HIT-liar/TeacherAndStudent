@@ -7,18 +7,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.firstpro.WebService.MyURL;
+import com.example.firstpro.WebService.ServerService;
+import com.example.firstpro.activity.activityhelper.ActivityCollector;
+import com.example.firstpro.activity.commonactivity.MainActivity;
+import com.example.firstpro.activity.commonactivity.RegisterActivity;
+import com.example.firstpro.data.Me;
 import com.example.firstpro.database.AutoLoginStatic;
 import com.example.firstpro.data.Class;
 import com.example.firstpro.activity.activityhelper.MyActivity;
 import com.example.firstpro.database.ClassesSQLIteHelper;
 import com.example.firstpro.database.MySQLIteHelper;
 import com.example.firstpro.R;
+
+import java.lang.ref.WeakReference;
+import java.util.Locale;
 
 public class AddClassesActivity extends MyActivity {
 
@@ -31,6 +42,9 @@ public class AddClassesActivity extends MyActivity {
     private EditText classtime;
     private EditText class_id;
     private Context context;
+
+    private MyHandler myHandler = new MyHandler(this);
+    private ServerService sv = new ServerService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,12 +108,13 @@ public class AddClassesActivity extends MyActivity {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     Class myclass = new Class(classid_str,classname_str,classnum_int,classMaxnum_int,credit_double,location_str,classtime_str,account,0);
-                                    ClassesSQLIteHelper.getInstance(context).insertClass(myclass);
-                                    Intent intent = new Intent();
-                                    intent.setClass(AddClassesActivity.this, myclassesActivity.class);
-
-                                    startActivity(intent);
-                                    AddClassesActivity.this.finish();
+                                    AddToRemote(myclass);
+//                                    ClassesSQLIteHelper.getInstance(context).insertClass(myclass);
+//                                    Intent intent = new Intent();
+//                                    intent.setClass(AddClassesActivity.this, myclassesActivity.class);
+//
+//                                    startActivity(intent);
+//                                    AddClassesActivity.this.finish();
                                 }
                             })
                             .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -114,4 +129,62 @@ public class AddClassesActivity extends MyActivity {
             }
         });
     }
+
+    private void AddToRemote(Class the_class){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+             String flag = sv.AddClassToRemote(the_class, MyURL.TeaURL);
+             Message msg = myHandler.obtainMessage();
+             msg.what=1;
+             if(flag.equals("true")){
+                 msg.arg1=1;
+             }else if(flag.equals("repeat")){
+                 msg.arg1=2;
+             }else{
+                 msg.arg1=3;
+             }
+             msg.obj = the_class;
+             myHandler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    private class MyHandler extends Handler {
+
+        //弱引用持有HandlerActivity , GC 回收时会被回收掉
+        private WeakReference<AddClassesActivity> weakReference;
+
+        public MyHandler(AddClassesActivity activity) {
+            this.weakReference = new WeakReference(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+
+            Class _class;
+            switch (msg.what) {
+                case 1:
+                    if(msg.arg1==1){
+                        _class = (Class) msg.obj;
+                        ClassesSQLIteHelper.getInstance(context).insertClass(_class);
+                        Intent intent = new Intent();
+                        intent.setClass(AddClassesActivity.this, myclassesActivity.class);
+
+                        startActivity(intent);
+                        AddClassesActivity.this.finish();
+                    }else if(msg.arg1==2){
+                        Toast.makeText(getApplicationContext(),"添加失败,课程号已存在",Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(),"添加失败,请检查网络",Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+
+
+            }
+        }
+    }
+
 }
