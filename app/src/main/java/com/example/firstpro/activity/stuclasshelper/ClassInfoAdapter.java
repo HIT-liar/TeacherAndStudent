@@ -201,7 +201,7 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
         new Thread(new Runnable() {
             @Override
             public void run() {
-              boolean flag =  sv.DeleteMyClass(class_id, MyURL.LoginURL,false,stu_id,true);
+              boolean flag =  sv.DeleteMyClass(class_id, MyURL.StuURL,false,stu_id,true);
 
                 System.out.println(flag);
                 Message msg = myHandler.obtainMessage();
