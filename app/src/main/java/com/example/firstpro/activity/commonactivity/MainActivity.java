@@ -80,22 +80,23 @@ public class MainActivity extends MyActivity {
         boolean isteacher = AutoLoginStatic.getInstance().isTeacher(context);
 
 
-//          if(NetJudgeHelper.isNetworkAvailable(context)) {
-//              AutoLoginFromServer(uname, pass);
-//          }else{
-//              Intent intent = new Intent();
-//              if(isteacher) {
-//                  intent.setClass(MainActivity.this, teacherMainPageAbility.class);
-//              }else{
-//                  intent.setClass(MainActivity.this, StuMainPageActivity.class);
-//              }
-//              startActivity(intent);
-//              MainActivity.this.finish();
-//          }
 
         //若账号存在，此时其实是做核数据库内容的比较
         //ToChange:
-        AutoLoginFromServer(uname,pass);
+        if(NetJudgeHelper.isNetworkAvailable(context)) {
+            AutoLoginFromServer(uname, pass);
+        }else{
+            Intent intent = new Intent();
+            if(isteacher) {//老师
+                intent.setClass(MainActivity.this, teacherMainPageAbility.class);
+            }else{//学生
+                intent.setClass(MainActivity.this, StuMainPageActivity.class);
+            }
+            startActivity(intent);
+            MainActivity.this.finish();
+        }
+
+
 //        if(uname.equals("12345")&&pass.equals("12345678")&&isteacher){
 //            Intent intent = new Intent();
 //            intent.setClass(MainActivity.this, teacherMainPageAbility.class);

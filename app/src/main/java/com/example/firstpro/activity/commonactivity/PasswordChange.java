@@ -39,6 +39,7 @@ public class PasswordChange extends MyActivity {
     private  String account = AutoLoginStatic.getInstance().getUserNum(this);
     private ServerService sv =new ServerService();
     private MyHandler myHandler= new MyHandler(this);
+    private String pas=AutoLoginStatic.getInstance().getPassword(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class PasswordChange extends MyActivity {
 
                 if(TextUtils.isEmpty(op_str)||TextUtils.isEmpty(np_str)||TextUtils.isEmpty(anp_str)){
                     Toast.makeText(getApplicationContext(),"各项均不能为空",Toast.LENGTH_SHORT).show();
-                }else if(!op_str.equals("12345678")){
+                }else if(!op_str.equals(pas)){
                     //ToChange:需从数据库中取得对应账号对应的原密码
                     Toast.makeText(getApplicationContext(),"原密码不正确",Toast.LENGTH_SHORT).show();
                 }else if(np_str.length()<8){

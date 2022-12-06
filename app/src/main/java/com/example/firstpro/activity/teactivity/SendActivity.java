@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,10 +24,16 @@ public class SendActivity extends AppCompatActivity implements  View.OnClickList
     private LinearLayout llfile,llquestion;
     private ImageView ivfile,ivquestion,ivcurrent;
 
+    private String classid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getBundleExtra("bun");
+        classid = bundle.getString("classid");
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.send_toolbar) ;
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -54,12 +61,10 @@ public class SendActivity extends AppCompatActivity implements  View.OnClickList
     }
 
     private void initPager() {
-
-
         viewPager = findViewById(R.id.send_viewPager);
         ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(AddfileFragment.newInstance("qq","qq"));
-        fragments.add(QuestionFragment.newInstance("qq","qq"));
+        fragments.add(AddfileFragment.newInstance(classid,"qq"));
+        fragments.add(QuestionFragment.newInstance(classid,"qq"));
         MySendFragmentPagerAdapter pagerAdapter = new MySendFragmentPagerAdapter(getSupportFragmentManager(),getLifecycle(),fragments);
         viewPager.setAdapter(pagerAdapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {

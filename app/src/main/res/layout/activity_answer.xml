@@ -25,8 +25,10 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="-95dp">
 
-        <View
-            android:id="@+id/question_view"
+        <TextView
+            android:id="@+id/question_textview"
+            android:gravity="center"
+            android:textSize="23dp"
             android:layout_width="match_parent"
             android:layout_height="448dp" />
 

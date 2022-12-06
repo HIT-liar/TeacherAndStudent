@@ -5,13 +5,22 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.firstpro.R;
+import com.example.firstpro.activity.listviewadapter.ClassListAdapter;
 import com.example.firstpro.activity.teactivity.TextQuesActivity;
+import com.example.firstpro.activity.teactivity.myclassesActivity;
+import com.example.firstpro.data.Class;
+import com.example.firstpro.database.ClassesSQLIteHelper;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -84,9 +93,14 @@ public class QuestionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
+                Bundle bundle = new Bundle();
+                bundle.putString("classsid",mParam1);
+                intent.putExtra("bun",bundle);
                 intent.setClass(getActivity(), TextQuesActivity.class);
                 startActivity(intent);
             }
         });
     }
+
+
 }

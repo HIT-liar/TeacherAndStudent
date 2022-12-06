@@ -53,7 +53,7 @@ public class StuMainPageActivity extends MyActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(StuMainPageActivity.this,StuOnClassActivity.class);
+                intent.setClass(StuMainPageActivity.this,ClassAnswerActivity.class);
 
                 startActivity(intent);
             }

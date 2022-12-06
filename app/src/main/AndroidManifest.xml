@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,9 +13,30 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.FirstPro"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".activity.stuactivity.AnsListActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.stuactivity.ClassAnswerActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.teactivity.answerDetailActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".activity.stuactivity.StuMyclassMessageActivity"
             android:exported="false">
@@ -39,21 +61,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.stuactivity.SignInActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".activity.stuactivity.AnswerActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".activity.stuactivity.StuOnClassActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -75,6 +83,13 @@
         </activity>
         <activity
             android:name=".activity.teactivity.SendActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activity.teactivity.ClassDiscussActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -116,20 +131,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activity.teactivity.askActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".activity.teactivity.SignInActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".activity.teactivity.AddClassesActivity"
             android:exported="true">
             <meta-data
@@ -138,13 +139,6 @@
         </activity>
         <activity
             android:name=".activity.teactivity.myclassesActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".activity.teactivity.OnClassActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

@@ -1,21 +1,35 @@
 package com.example.firstpro.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.firstpro.R;
+import com.example.firstpro.WebService.MyURL;
+import com.example.firstpro.WebService.ServerService;
+import com.example.firstpro.activity.activityhelper.ActivityCollector;
 import com.example.firstpro.activity.listviewadapter.FileListAdapter;
+import com.example.firstpro.activity.teactivity.SendActivity;
+import com.example.firstpro.activity.teactivity.StuIsSignActivity;
+import com.example.firstpro.activity.teactivity.TextQuesActivity;
 import com.example.firstpro.data.FileToSend;
+import com.example.firstpro.data.Question;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,9 +47,13 @@ public class AddfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     View rootView;
-    private List<FileToSend> list = new ArrayList<>();
+    private List<Question> list = new ArrayList<>();
     private ListView listView;
     private FileListAdapter fileListAdapter;
+
+    private ServerService sv = new ServerService();
+    private MyHandler myHandler = new MyHandler((SendActivity) getActivity());
+
 
     public AddfileFragment() {
         // Required empty public constructor
@@ -82,27 +100,71 @@ public class AddfileFragment extends Fragment {
     private void ListReact() {
         listView = (ListView) rootView.findViewById(R.id.list_file_frag);
 
-        //传输的文件显示
-        FileToSend fileToSend1 = new FileToSend();
-        list.add(fileToSend1);
+        //获得该课所有题目
+        getQuesFromRemote();
 
-        fileListAdapter = new FileListAdapter(getActivity(),list);
-        listView.setAdapter(fileListAdapter);
+        //todo:删除下面内容
+//        Question q = new Question("11qq","1+2","2020-2-2");
+//        q.setQuestionId(1);
+//        list.add(q);
+//        fileListAdapter = new FileListAdapter(getActivity(),list);
+//        listView.setAdapter(fileListAdapter);
 
 
     }
-
     private void initView() {
 
-        Button button =(Button) rootView.findViewById(R.id.add_file);
-        button.setOnClickListener(new View.OnClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent();
+                Bundle bundle =new Bundle();
+                bundle.putInt("quesID",list.get(position).GetQuestionId());
+                bundle.putString("quesText",list.get(position).getText());
+                intent.putExtra("bun",bundle);
+                intent.setClass(getActivity().getApplicationContext(), StuIsSignActivity.class);
 
-                //ToDo：传输文件
-                //ListReact();
+                startActivity(intent);
             }
         });
-
     }
+
+    private void getQuesFromRemote(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Question> questions = sv.getQuestion(mParam1, MyURL.QAURL);
+                Message msg = myHandler.obtainMessage();
+                msg.obj = questions;
+                msg.what = 1;
+                myHandler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    private class MyHandler extends Handler {
+
+        //弱引用持有HandlerActivity , GC 回收时会被回收掉
+        private WeakReference<SendActivity> weakReference;
+
+        public MyHandler(SendActivity activity) {
+            this.weakReference = new WeakReference(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            List<Question> que = (List<Question>) msg.obj;
+            switch (msg.what) {
+                case 1:
+                    list.clear();
+                    list.addAll(que);
+                    fileListAdapter = new FileListAdapter(getActivity(),list);
+                    listView.setAdapter(fileListAdapter);
+                    break;
+            }
+        }
+    }
+
+
 }

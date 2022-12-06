@@ -51,7 +51,7 @@ public class teacherMainPageAbility extends MyActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                intent.setClass(teacherMainPageAbility.this, OnClassActivity.class);
+                intent.setClass(teacherMainPageAbility.this, ClassDiscussActivity.class);
 
                 startActivity(intent);
             }

@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class myclassesActivity extends MyActivity {
+public class ClassDiscussActivity extends MyActivity {
 
     private  List<Class> list = new ArrayList<Class>();
     private ListView listView;
@@ -49,7 +49,7 @@ public class myclassesActivity extends MyActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_myclasses);
+        setContentView(R.layout.activity_class_discuss);
         context=this;
 
         ButtonReact();
@@ -57,33 +57,22 @@ public class myclassesActivity extends MyActivity {
     }
 
     private void ButtonReact(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.myclasses_toolbar);
-        Button button_add = (Button) findViewById(R.id.addclass_btn);
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.classes_discuss_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityCollector.finishOneActivity(myclassesActivity.class.getName());
+                ActivityCollector.finishOneActivity(ClassDiscussActivity.class.getName());
 
             }
         });
-
-        button_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(myclassesActivity.this, AddClassesActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
     private void ListReact(){
-        listView = (ListView) findViewById(R.id.class_listview);
+        listView = (ListView) findViewById(R.id.class_discuss_listview);
+
+        //todo:删掉下面内容
 //        Class class1 =new Class();
 //        Class class2 =new Class();
-//
 //        class1.setClass_name("微积分");
 //        class1.setClass_id("12E3");
 //        class1.setTrue_stu_num(50);
@@ -105,25 +94,18 @@ public class myclassesActivity extends MyActivity {
 //        list.add(class2);
 
         getClassFromDB();
-
-        classListAdapter = new ClassListAdapter(this,list);
-        listView.setAdapter(classListAdapter);
+//        classListAdapter = new ClassListAdapter(this,list);
+//        listView.setAdapter(classListAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.setClass(myclassesActivity.this, ClassMessageActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("class_id",list.get(position).getClass_id());
-                bundle.putString("name",list.get(position).getClass_name());
-                bundle.putString("num", new Integer(list.get(position).getClass_num()).toString());
-                bundle.putString("stu_max",new Integer(list.get(position).getMax_stu_num()).toString());
-                bundle.putString("stu_true",new Integer(list.get(position).getTrue_stu_num()).toString());
-                bundle.putString("credit",new Double(list.get(position).getCourse_credit()).toString());
-                bundle.putString("location",list.get(position).getLocation_Of_Class());
-                bundle.putString("time",list.get(position).getTime());
+                //todo：进入问题界面
+                Bundle bundle=new Bundle();
+                bundle.putString("classid",list.get(position).getClass_id());
                 intent.putExtra("bun",bundle);
+                intent.setClass(ClassDiscussActivity.this,SendActivity.class);
                 startActivity(intent);
             }
         });
@@ -198,9 +180,9 @@ public class myclassesActivity extends MyActivity {
     private class MyHandler extends Handler {
 
         //弱引用持有HandlerActivity , GC 回收时会被回收掉
-        private WeakReference<myclassesActivity> weakReference;
+        private WeakReference<ClassDiscussActivity> weakReference;
 
-        public MyHandler(myclassesActivity activity) {
+        public MyHandler(ClassDiscussActivity activity) {
             this.weakReference = new WeakReference(activity);
         }
 

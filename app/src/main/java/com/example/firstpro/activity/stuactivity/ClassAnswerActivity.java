@@ -1,5 +1,6 @@
-package com.example.firstpro.activity.teactivity;
+package com.example.firstpro.activity.stuactivity;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
@@ -11,79 +12,68 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.example.firstpro.R;
 import com.example.firstpro.WebService.MyURL;
 import com.example.firstpro.WebService.ServerService;
 import com.example.firstpro.activity.activityhelper.ActivityCollector;
-import com.example.firstpro.database.AutoLoginStatic;
-import com.example.firstpro.data.Class;
-import com.example.firstpro.activity.listviewadapter.ClassListAdapter;
 import com.example.firstpro.activity.activityhelper.MyActivity;
-import com.example.firstpro.database.ChooseClassSQLIteHelper;
+import com.example.firstpro.activity.listviewadapter.ClassListAdapter;
+import com.example.firstpro.activity.teactivity.ClassDiscussActivity;
+import com.example.firstpro.activity.teactivity.SendActivity;
+import com.example.firstpro.data.Class;
+import com.example.firstpro.database.AutoLoginStatic;
 import com.example.firstpro.database.ClassesSQLIteHelper;
-import com.example.firstpro.database.MySQLIteHelper;
-import com.example.firstpro.R;
 import com.example.firstpro.helper.NetJudgeHelper;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+public class ClassAnswerActivity extends MyActivity {
 
-public class myclassesActivity extends MyActivity {
-
-    private  List<Class> list = new ArrayList<Class>();
+    private List<Class> list = new ArrayList<Class>();
     private ListView listView;
 
     private ClassListAdapter classListAdapter;
     private Context context;
 
     private ServerService sv = new ServerService();
+    private String account = AutoLoginStatic.getInstance().getUserNum(this);
     private MyHandler myHandler = new MyHandler(this);
 
-    private String Teaid = AutoLoginStatic.getInstance().getUserNum(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_myclasses);
-        context=this;
+        setContentView(R.layout.activity_class_answer);
+        context =this;
 
         ButtonReact();
         ListReact();
+
     }
 
-    private void ButtonReact(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.myclasses_toolbar);
-        Button button_add = (Button) findViewById(R.id.addclass_btn);
 
+
+    private void ButtonReact(){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.stu_classes_discuss_toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ActivityCollector.finishOneActivity(myclassesActivity.class.getName());
+                ActivityCollector.finishOneActivity(ClassAnswerActivity.class.getName());
 
             }
         });
-
-        button_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClass(myclassesActivity.this, AddClassesActivity.class);
-                startActivity(intent);
-            }
-        });
-
     }
 
     private void ListReact(){
-        listView = (ListView) findViewById(R.id.class_listview);
+        listView = (ListView) findViewById(R.id.stu_class_discuss_listview);
+
+        //todo:删掉下面内容
 //        Class class1 =new Class();
 //        Class class2 =new Class();
-//
 //        class1.setClass_name("微积分");
 //        class1.setClass_id("12E3");
 //        class1.setTrue_stu_num(50);
@@ -105,25 +95,18 @@ public class myclassesActivity extends MyActivity {
 //        list.add(class2);
 
         getClassFromDB();
-
-        classListAdapter = new ClassListAdapter(this,list);
-        listView.setAdapter(classListAdapter);
+//        classListAdapter = new ClassListAdapter(this,list);
+//        listView.setAdapter(classListAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent();
-                intent.setClass(myclassesActivity.this, ClassMessageActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("class_id",list.get(position).getClass_id());
-                bundle.putString("name",list.get(position).getClass_name());
-                bundle.putString("num", new Integer(list.get(position).getClass_num()).toString());
-                bundle.putString("stu_max",new Integer(list.get(position).getMax_stu_num()).toString());
-                bundle.putString("stu_true",new Integer(list.get(position).getTrue_stu_num()).toString());
-                bundle.putString("credit",new Double(list.get(position).getCourse_credit()).toString());
-                bundle.putString("location",list.get(position).getLocation_Of_Class());
-                bundle.putString("time",list.get(position).getTime());
+                //todo：进入问题界面
+                Bundle bundle=new Bundle();
+                bundle.putString("classid",list.get(position).getClass_id());
                 intent.putExtra("bun",bundle);
+                intent.setClass(ClassAnswerActivity.this, AnsListActivity.class);
                 startActivity(intent);
             }
         });
@@ -138,7 +121,7 @@ public class myclassesActivity extends MyActivity {
         //只要联网了，就取远端数据并更新本地数据库
         if(NetJudgeHelper.isNetworkAvailable(context)){
             find_in_local=false;//就不用本地设置了
-            MyClassesFromRemote();
+            GetMyClass();
         }
         //如果断网，则直接显示本地数据
         if(find_in_local) {
@@ -181,15 +164,14 @@ public class myclassesActivity extends MyActivity {
         }
     }
 
-    public void MyClassesFromRemote(){
+    private void GetMyClass()  {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<Class> classList = sv.getClasses(MyURL.TeaURL,true,Teaid,false,null);
-                Message msg =myHandler.obtainMessage();
-                msg.obj = classList;
+                List<Class> _classList = sv.getClasses(MyURL.StuURL,false,null,true,account);
+                Message msg = myHandler.obtainMessage();
+                msg.obj=_classList;
                 msg.what = 1;
-
                 myHandler.sendMessage(msg);
             }
         }).start();
@@ -198,9 +180,9 @@ public class myclassesActivity extends MyActivity {
     private class MyHandler extends Handler {
 
         //弱引用持有HandlerActivity , GC 回收时会被回收掉
-        private WeakReference<myclassesActivity> weakReference;
+        private WeakReference<ClassAnswerActivity> weakReference;
 
-        public MyHandler(myclassesActivity activity) {
+        public MyHandler(ClassAnswerActivity activity) {
             this.weakReference = new WeakReference(activity);
         }
 
@@ -218,5 +200,4 @@ public class myclassesActivity extends MyActivity {
             }
         }
     }
-
 }

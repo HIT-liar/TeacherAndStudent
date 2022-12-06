@@ -46,7 +46,6 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
     ServerService sv = new ServerService();
     MyHandler myHandler = new MyHandler();
     private String stu_id = AutoLoginStatic.getInstance().getUserNum(mContext);
-    private String class_id = "";
 
     private int max;
     private int true_num;
@@ -80,7 +79,6 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
         }
         holder.classID_text.setText(classList.get(position).getClass_id());
         bundle.putString("class_id",classList.get(position).getClass_id());
-        class_id =classList.get(position).getClass_id();
 
         holder.className_text.setText(classList.get(position).getClass_name());
         bundle.putString("classname",classList.get(position).getClass_name());
@@ -174,16 +172,17 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
                 @Override
                 public void onClick(View view) {
                     //mListener.onClick(view);
+                    String classId = (String) classID_text.getText();
                     if (isSelect) {
                         if(max>true_num) {
-                            ChoseClass();
+                            ChoseClass(classId);
                         }else {
                             Toast.makeText(mContext, "容量已满", Toast.LENGTH_LONG).show();
                         }
 //                        String s = chooseClassSQLIteHelper.insertChoice(class_id,stu_id);
 //                        Toast.makeText(mContext, "Select: " + s, Toast.LENGTH_LONG).show();
                     } else {
-                        DeleteChoice();
+                        DeleteChoice(classId);
 //                        String s = chooseClassSQLIteHelper.deleteOne(class_id,stu_id);
 //                        Toast.makeText(mContext, "Unselect: " + s, Toast.LENGTH_LONG).show();
                     }
@@ -196,7 +195,7 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
         void OnClick(int pos);
     }
 
-    public void ChoseClass(){
+    public void ChoseClass(String class_id){
 
         new Thread(new Runnable() {
             @Override
@@ -211,12 +210,13 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
                 }else {
                     msg.arg1 =2;
                 }
+                msg.obj=class_id;
                 myHandler.sendMessage(msg);
             }
         }).start();
     }
 
-    public void DeleteChoice(){
+    public void DeleteChoice(String class_id){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -229,7 +229,7 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
                 }else {
                     msg.arg1 =2;
                 }
-
+                msg.obj = class_id;
                 myHandler.sendMessage(msg);
             }
         }).start();
@@ -242,6 +242,7 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             ChooseClassSQLIteHelper chooseClassSQLIteHelper = ChooseClassSQLIteHelper.getInstance(mContext);
+            String class_id = (String) msg.obj;
             switch (msg.what) {
                 case 1:
                     String s = chooseClassSQLIteHelper.insertChoice(class_id,stu_id);

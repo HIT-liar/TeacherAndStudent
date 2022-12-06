@@ -273,7 +273,6 @@ public class PMessageChange extends MyActivity {
                         Intent intent = new Intent();
                         intent.setClass(PMessageChange.this, PersonIformationActivity.class);
                         startActivity(intent);
-                        ActivityCollector.finishOneActivity(PMessageChange.class.getName());
                         break;
                     }
             }

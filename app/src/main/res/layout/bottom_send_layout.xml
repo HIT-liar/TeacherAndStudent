@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/ppt_text"
             android:gravity="center"
-            android:text="文件"/>
+            android:text="习题"/>
     </LinearLayout>
 
     <LinearLayout
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/qus_text"
             android:gravity="center"
-            android:text="习题"/>
+            android:text="发布"/>
     </LinearLayout>
 
 

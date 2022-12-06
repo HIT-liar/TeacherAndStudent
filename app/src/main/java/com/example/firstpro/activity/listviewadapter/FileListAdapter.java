@@ -10,16 +10,17 @@ import android.widget.TextView;
 
 import com.example.firstpro.R;
 import com.example.firstpro.data.FileToSend;
+import com.example.firstpro.data.Question;
 
 import java.util.List;
 
 public class FileListAdapter extends BaseAdapter {
 
-    private List<FileToSend> list;
+    private List<Question> list;
     private Context context;
     private LayoutInflater mInflater;
 
-    public FileListAdapter(Context context, List<FileToSend>list){
+    public FileListAdapter(Context context, List<Question>list){
 
         this.list=list;
         this.context=context;
@@ -48,26 +49,23 @@ public class FileListAdapter extends BaseAdapter {
        if(file_send == null){
            file_send = mInflater.inflate(R.layout.file_item , null);
            viewHolder = new ViewHolder();
-           viewHolder.img = (ImageView) file_send.findViewById(R.id.file_img);
+           viewHolder.date = (TextView) file_send.findViewById(R.id.ques_time);
            viewHolder.FileName = (TextView) file_send.findViewById(R.id.file_name_text);
            file_send.setTag(viewHolder);
        }else {
            viewHolder = (ViewHolder) file_send.getTag();
        }
        try {
-           if(list.get(position).GetFileName().contains(".docx")||list.get(position).GetFileName().contains(".doc")){
-               viewHolder.img.setImageResource(R.drawable.word);
-           }
-           if (list.get(position).GetFileName().contains(".pptx")){
-               viewHolder.img.setImageResource(R.drawable.ppt);
-           }
-           if (list.get(position).GetFileName().contains(".pdf")){
-               viewHolder.img.setImageResource(R.drawable.pdf);
-           }
-           if(list.get(position).GetFileName()!=null){
-               viewHolder.FileName.setText(list.get(position).GetFileName());
+           if(list.get(position).getText()!=null){
+               viewHolder.FileName.setText(list.get(position).getText());
            }else {
-               viewHolder.FileName.setText("文件名不详");
+               viewHolder.FileName.setText("题目获取失败");
+           }
+
+           if(list.get(position).getDate()!=null){
+               viewHolder.date.setText(list.get(position).getDate());
+           }else {
+               viewHolder.date.setText("题目获取失败");
            }
        }catch (Exception e){
            e.printStackTrace();
@@ -76,7 +74,7 @@ public class FileListAdapter extends BaseAdapter {
     }
 
     public final class ViewHolder{
-        public ImageView img;
+        public TextView date;
         public TextView FileName;
 
 

@@ -2,8 +2,10 @@ package com.example.firstpro.WebService;
 
 import android.util.Log;
 
+import com.example.firstpro.data.Answer;
 import com.example.firstpro.data.Class;
 import com.example.firstpro.data.Me;
+import com.example.firstpro.data.Question;
 import com.example.firstpro.data.Student;
 import com.example.firstpro.helper.StreamHelper;
 
@@ -590,4 +592,225 @@ public class ServerService {
         }
         return false;
     }
+
+    public boolean SendQues(Question ques,String url_str){
+        try {
+            System.out.println("已执行");
+            System.out.println("发送到"+url_str);
+            URL url = new URL(url_str);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setConnectTimeout(3000);
+            httpURLConnection.setReadTimeout(2000);
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            httpURLConnection.connect();
+
+            //向服务器端发送输入的账号
+            JSONObject json = new JSONObject();
+            json.put("code",14);
+            System.out.println("classid:"+ques.getClassid());
+            json.put("classId",ques.getClassid());
+            json.put("time",ques.getDate());
+            json.put("questionText",ques.getText());
+
+            System.out.println(json.toString());
+
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            OutputStreamWriter opw = new OutputStreamWriter(outputStream,"UTF-8");
+            BufferedWriter writer = new BufferedWriter(opw);
+            writer.write(json.toString());
+            writer.close();
+            opw.close();
+            outputStream.close();
+            //这里还有更多判定，比如会收到用户名不能重复的返回码
+            System.out.println(httpURLConnection.getResponseCode());
+            if(httpURLConnection.getResponseCode()==HttpURLConnection.HTTP_OK){
+                httpURLConnection.disconnect();
+                return true;
+            }else if(httpURLConnection.getResponseCode() == 400){
+                httpURLConnection.disconnect();
+            }
+        }catch (Exception e){
+            Log.e("error",e.getMessage());
+            return false;
+        }
+        return false;
+    }
+
+    public List<Question> getQuestion(String classId,String url_str){
+        List<Question> questions = new ArrayList<>();
+        String result ="";
+        try {
+            URL url = new URL(url_str);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setConnectTimeout(3000);
+            httpURLConnection.setReadTimeout(2000);
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            httpURLConnection.connect();
+
+
+            JSONObject json = new JSONObject();
+
+                json.put("code", 15);
+                json.put("classId", classId);
+
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            OutputStreamWriter opw = new OutputStreamWriter(outputStream,"UTF-8");
+            BufferedWriter writer = new BufferedWriter(opw);
+            writer.write(json.toString());
+            writer.close();
+            opw.close();
+            outputStream.close();
+
+            if(httpURLConnection.getResponseCode()==HttpURLConnection.HTTP_OK){
+                InputStream is = httpURLConnection.getInputStream();
+                result = StreamHelper.InputToString(is);
+                httpURLConnection.disconnect();
+                is.close();
+            }
+        }catch (Exception e){
+            Log.e("error",e.getMessage());
+            result = "";
+        }
+ System.out.println(result);
+        if(result!=""){
+            try {
+                JSONObject js = new JSONObject(result);
+                JSONArray jsonArray = js.getJSONArray("question");
+                int size = jsonArray.length();
+                for(int i=0 ;i<size ;i++){
+                    JSONObject _js = jsonArray.getJSONObject(i);
+                    String time = _js.getString("time");
+                    String text = _js.getString("questionText");
+                    int q_id = _js.getInt("questionId");
+
+                    Question s = new Question(classId,text,time);
+                    s.setQuestionId(q_id);
+                   questions.add(s);
+                }
+            }catch (JSONException e){
+                Log.e("error",e.getMessage());
+            }
+        }
+        return  questions;
+    }
+
+    public List<Answer> getAnswer(int quesId,String url_str){
+        List<Answer> answers = new ArrayList<>();
+        String result ="";
+        try {
+            URL url = new URL(url_str);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setConnectTimeout(3000);
+            httpURLConnection.setReadTimeout(2000);
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            httpURLConnection.connect();
+
+
+            JSONObject json = new JSONObject();
+
+            json.put("code", 17);
+            json.put("questionId", quesId);
+
+
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            OutputStreamWriter opw = new OutputStreamWriter(outputStream,"UTF-8");
+            BufferedWriter writer = new BufferedWriter(opw);
+            writer.write(json.toString());
+            writer.close();
+            opw.close();
+            outputStream.close();
+
+            if(httpURLConnection.getResponseCode()==HttpURLConnection.HTTP_OK){
+                InputStream is = httpURLConnection.getInputStream();
+                result = StreamHelper.InputToString(is);
+                httpURLConnection.disconnect();
+                is.close();
+            }
+        }catch (Exception e){
+            Log.e("error",e.getMessage());
+            result = "";
+        }
+System.out.println(result);
+        if(result!=""){
+            try {
+                JSONObject js = new JSONObject(result);
+                JSONArray jsonArray = js.getJSONArray("question");
+                int size = jsonArray.length();
+                for(int i=0 ;i<size ;i++){
+                    JSONObject _js = jsonArray.getJSONObject(i);
+                    String time = _js.getString("time");
+                    String text = _js.getString("answerText");
+                    int a_id = _js.getInt("answerId");
+                    String stu_name = _js.getString("stuName");
+                    String stu_id = _js.getString("stuId");
+
+                    Answer ans = new Answer(stu_id,quesId,text,time);
+                    ans.setStuName(stu_name);
+                    ans.setAnswerId(a_id);
+
+                     answers.add(ans);
+                }
+            }catch (JSONException e){
+                Log.e("error",e.getMessage());
+            }
+        }
+        return  answers;
+    }
+
+    public boolean SendAnswer(Answer answer , String url_str){
+        try {
+            URL url = new URL(url_str);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+            httpURLConnection.setConnectTimeout(3000);
+            httpURLConnection.setReadTimeout(2000);
+            httpURLConnection.setUseCaches(false);
+            httpURLConnection.setDoInput(true);
+            httpURLConnection.setDoOutput(true);
+            httpURLConnection.setRequestMethod("POST");
+            httpURLConnection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            httpURLConnection.connect();
+
+            //向服务器端发送输入的账号
+            JSONObject json = new JSONObject();
+            json.put("code",18);
+            json.put("stuId",answer.getStuId());
+            json.put("questionId",answer.getQuestionId());
+            json.put("time",answer.getTime());
+            json.put("answerText",answer.getAnsText());
+
+
+
+            OutputStream outputStream = httpURLConnection.getOutputStream();
+            OutputStreamWriter opw = new OutputStreamWriter(outputStream,"UTF-8");
+            BufferedWriter writer = new BufferedWriter(opw);
+            writer.write(json.toString());
+            writer.close();
+            opw.close();
+            outputStream.close();
+            //这里还有更多判定，比如会收到用户名不能重复的返回码
+            if(httpURLConnection.getResponseCode()==HttpURLConnection.HTTP_OK){
+                httpURLConnection.disconnect();
+                return true;
+            }else if(httpURLConnection.getResponseCode() == 400){
+                httpURLConnection.disconnect();
+            }
+        }catch (Exception e){
+            Log.e("error",e.getMessage());
+            return false;
+        }
+        return false;
+    }
+
 }
