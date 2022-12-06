@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".activity.teactivity.SendActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/send_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="问题讨论"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_24"
+        />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:id="@+id/send_viewPager"
+        />
+
+    <include layout="@layout/bottom_send_layout"/>
+
+</LinearLayout>

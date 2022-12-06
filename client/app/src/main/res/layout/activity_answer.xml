@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.stuactivity.AnswerActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/answerQuestion_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/green_dff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_baseline_arrow_back_ios_24"
+        app:title="答题" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-95dp">
+
+        <TextView
+            android:id="@+id/question_textview"
+            android:gravity="center"
+            android:textSize="23dp"
+            android:layout_width="match_parent"
+            android:layout_height="448dp" />
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/answerInput"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:hint="请在此处作答" />
+
+        <Button
+            android:id="@+id/button_stu_submit_answer"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提交答案" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
