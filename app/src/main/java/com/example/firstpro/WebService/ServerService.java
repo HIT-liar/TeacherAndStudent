@@ -674,6 +674,8 @@ public class ServerService {
                 result = StreamHelper.InputToString(is);
                 httpURLConnection.disconnect();
                 is.close();
+            }else{
+                httpURLConnection.disconnect();
             }
         }catch (Exception e){
             Log.e("error",e.getMessage());

@@ -35,6 +35,7 @@ import com.example.firstpro.activity.activityhelper.MyActivity;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.ClassInfoViewHolder> {
     private Context mContext;
@@ -42,6 +43,7 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
     private boolean isSelect;
     private List<Class> classList;
     Bundle bundle = new Bundle();
+    private Vector<String> chosenClass = new Vector<>();
 
     ServerService sv = new ServerService();
     MyHandler myHandler = new MyHandler();
@@ -200,18 +202,22 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
         new Thread(new Runnable() {
             @Override
             public void run() {
-              boolean flag =  sv.DeleteMyClass(class_id, MyURL.StuURL,false,stu_id,true);
-
-                System.out.println(flag);
-                Message msg = myHandler.obtainMessage();
-                msg.what = 1;
-                if(flag){
-                    msg.arg1 =1;
+                if (chosenClass.contains(class_id)){
+                    Toast.makeText(mContext, "您已经选过该课", Toast.LENGTH_LONG).show();
                 }else {
-                    msg.arg1 =2;
+                    boolean flag = sv.DeleteMyClass(class_id, MyURL.StuURL, false, stu_id, true);
+
+                    System.out.println(flag);
+                    Message msg = myHandler.obtainMessage();
+                    msg.what = 1;
+                    if (flag) {
+                        msg.arg1 = 1;
+                    } else {
+                        msg.arg1 = 2;
+                    }
+                    msg.obj = class_id;
+                    myHandler.sendMessage(msg);
                 }
-                msg.obj=class_id;
-                myHandler.sendMessage(msg);
             }
         }).start();
     }
@@ -246,8 +252,10 @@ public class ClassInfoAdapter extends RecyclerView.Adapter<ClassInfoAdapter.Clas
             switch (msg.what) {
                 case 1:
                     String s = chooseClassSQLIteHelper.insertChoice(class_id,stu_id);
-                    if(msg.arg1==1)
-                    Toast.makeText(mContext, "Select: " + s, Toast.LENGTH_LONG).show();
+                    if(msg.arg1==1) {
+                        chosenClass.add(class_id);
+                        Toast.makeText(mContext, "Select: " + s, Toast.LENGTH_LONG).show();
+                    }
                     else
                         Toast.makeText(mContext, "Select: false" , Toast.LENGTH_LONG).show();
                     break;
